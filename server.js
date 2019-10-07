@@ -25,7 +25,6 @@ server.get('/:id', validateAccountId, (req, res) => {
     }).catch(error => {
         res.status(500).json(error)
     })
-    
 });
 
 server.post('/', validateAccount, (req, res) => {
@@ -62,6 +61,29 @@ server.delete('/:id', validateAccountId, (req, res) => {
         res.status(500).json(error)
     })
     
+});
+
+server.put('/:id', validateAccountId, (req, res) => {
+    db('accounts')
+    .where('id', '=', req.params.id)
+    .first()
+    .update(req.body)
+    .then(response => {
+        if (response === 1) {
+            db.select('*').from('accounts')
+            .where('id', '=', req.params.id)
+            .first()
+            .then(account => {
+                res.status(200).json(account)
+            }).catch(error => {
+                res.status(500).json(error)
+            })
+        } else {
+            res.status(500).json('server error')
+        }
+    }).catch(error => {
+        res.status(500).json(error)
+    }) 
 });
 
 
