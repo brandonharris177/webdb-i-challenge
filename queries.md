@@ -12,7 +12,9 @@ where Supplierid = 11;
 
 ## List first 10 orders ever places, descending by the order date
 
-
+SELECT * FROM Orders
+order by OrderDate
+limit 10
 
 ## Find all customers that live in London, Madrid, or Brazil
 
