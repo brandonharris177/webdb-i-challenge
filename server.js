@@ -31,12 +31,12 @@ server.get('/:id', validateAccountId, (req, res) => {
 server.post('/', validateAccount, (req, res) => {
     db('accounts').insert(req.body, 'id')
     .then(id => {
-        console.log(`id`, id)
+        // console.log(`id`, id)
         db.select('*').from('accounts')
         .where('id', '=', id[0])
         .then(account => {
-            console.log(`account`, account)
-            res.status(201).json(account)
+            // console.log(`account`, account)
+            res.status(201).json(account[0])
         }).catch(error => {
             res.status(500).json(error)
         })
@@ -45,6 +45,25 @@ server.post('/', validateAccount, (req, res) => {
     })
     
 });
+
+server.delete('/:id', validateAccountId, (req, res) => {
+    db('accounts')
+    .where('id', '=', req.params.id)
+    .first()
+    .del()
+    .then(response => {
+        console.log(`response`, response)
+        if (response === 1) {
+            res.status(204).json('account deleted')
+        } else {
+            res.status(500).json('server error')
+        }  
+    }).catch(error => {
+        res.status(500).json(error)
+    })
+    
+});
+
 
 function validateAccountId(req, res, next) {
     db.select('*').from('accounts')
